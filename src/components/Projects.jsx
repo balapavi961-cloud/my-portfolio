@@ -206,6 +206,7 @@ const ProjectModal = ({ project, onClose }) => {
 
 const Projects = () => {
   const [selectedProject, setSelectedProject] = useState(null);
+  const isPrintMode = typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('print') === 'true';
 
   return (
     <section id="projects" className="py-24 bg-white relative overflow-hidden">
@@ -285,9 +286,132 @@ const Projects = () => {
         </div>
       </div>
 
+      {/* Print Mode: Render all project details inline */}
+      {isPrintMode && (
+        <div className="mt-24 pt-12 border-t border-slate-200">
+          <h2 className="text-4xl font-bold text-center mb-16 text-dark">Detailed Projects Information</h2>
+          {projectsData.map((project, index) => {
+            const details = project.fullDetails;
+            if (!details) return null;
+            return (
+              <div key={index} className="mb-24 bg-slate-50 p-8 md:p-12 rounded-[2.5rem] border border-slate-200" style={{ pageBreakInside: 'avoid', breakInside: 'avoid' }}>
+                <div className="mb-8">
+                  <span className="text-primary-600 font-bold tracking-widest uppercase text-xs mb-4 block">{project.subtitle}</span>
+                  <h3 className="text-3xl md:text-4xl font-bold text-dark mb-6">{project.title}</h3>
+                  {details.patent && (
+                    <div className="inline-flex items-center gap-3 bg-white px-5 py-2.5 rounded-full shadow-sm border border-primary-100 text-sm font-bold text-slate-700">
+                      <FaAward className="text-primary-600" /> {details.patent}
+                    </div>
+                  )}
+                </div>
+
+                <div className="grid lg:grid-cols-5 gap-12 mb-12">
+                  <div className="lg:col-span-3">
+                    <div className="rounded-3xl overflow-hidden shadow-md border border-slate-100">
+                      <img src={project.image} alt={project.title} className="w-full h-auto" />
+                    </div>
+                  </div>
+                  <div className="lg:col-span-2 space-y-8">
+                    <div>
+                      <h4 className="text-lg font-bold mb-4 flex items-center gap-2 text-dark">
+                        <FaRegLightbulb className="text-primary-600" /> Overview
+                      </h4>
+                      <p className="text-slate-600 leading-relaxed text-sm">
+                        {details.overview || project.description}
+                      </p>
+                    </div>
+                    <div>
+                      <h4 className="text-lg font-bold mb-4 flex items-center gap-2 text-dark">
+                        <FaTools className="text-primary-600" /> Tools
+                      </h4>
+                      <div className="flex flex-wrap gap-2">
+                        {(details.tools || []).map((tool, idx) => (
+                          <span key={idx} className="bg-white border border-slate-200 text-slate-700 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">
+                            {tool}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {details.keyFeatures && (
+                  <div className="mb-12">
+                    <h4 className="text-2xl font-bold mb-6 text-dark">Key Features</h4>
+                    <div className="grid md:grid-cols-2 gap-6">
+                      {details.keyFeatures.map((f, i) => (
+                        <div key={i} className="bg-white p-6 rounded-2xl border border-slate-100">
+                          <h5 className="font-bold text-dark mb-2">{f.title}</h5>
+                          <p className="text-sm text-slate-600 leading-relaxed">{f.desc}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {details.engineeringContributions && (
+                  <div className="bg-primary-900 text-white p-10 rounded-[2.5rem] mb-12">
+                    <h4 className="text-2xl font-bold mb-6">Engineering Contributions</h4>
+                    <ul className="space-y-4">
+                      {details.engineeringContributions.map((item, i) => (
+                        <li key={i} className="flex gap-3 items-start">
+                          <FaCheckCircle className="text-primary-400 mt-1 flex-shrink-0" />
+                          <span className="text-primary-50 text-sm leading-relaxed">{item}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                <div className="grid md:grid-cols-2 gap-12 mb-12">
+                  {details.technicalSkills && (
+                    <div>
+                      <h4 className="text-xl font-bold mb-6 text-dark flex items-center gap-3">
+                        <FaLaptopCode className="text-primary-600" /> Technical Skills
+                      </h4>
+                      <ul className="space-y-3">
+                        {details.technicalSkills.map((skill, i) => (
+                          <li key={i} className="flex items-center gap-3 text-slate-700">
+                            <div className="w-1.5 h-1.5 rounded-full bg-primary-500"></div>
+                            <span className="text-sm font-medium">{skill}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                  {details.outcome && (
+                    <div>
+                      <h4 className="text-xl font-bold mb-6 text-dark flex items-center gap-3">
+                        <FaAward className="text-primary-600" /> Outcome
+                      </h4>
+                      <p className="text-slate-700 leading-relaxed font-medium italic">
+                        "{details.outcome}"
+                      </p>
+                    </div>
+                  )}
+                </div>
+
+                {details.gallery && details.gallery.length > 1 && (
+                  <div>
+                    <h4 className="text-xl font-bold mb-6 text-dark">Gallery</h4>
+                    <div className="grid md:grid-cols-2 gap-6">
+                      {details.gallery.slice(1).map((img, i) => (
+                        <div key={i} className="rounded-2xl overflow-hidden border border-slate-100 shadow-sm" style={{ pageBreakInside: 'avoid' }}>
+                          <img src={img} alt="Gallery" className="w-full h-auto" />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      )}
+
       {/* Modal Detail View */}
       <AnimatePresence>
-        {selectedProject && (
+        {selectedProject && !isPrintMode && (
           <ProjectModal 
             project={selectedProject} 
             onClose={() => setSelectedProject(null)} 

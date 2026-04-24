@@ -1,6 +1,6 @@
-import { FaExternalLinkAlt, FaCheckCircle, FaLaptopCode, FaWrench, FaTools, FaDraftingCompass, FaCube, FaPrint, FaCogs } from 'react-icons/fa';
 
-export const projectsData = [
+
+const projectsData = [
   {
     id: 'electric-trolley',
     title: 'Multipurpose Tiltable Electric Trolley',
@@ -144,3 +144,5 @@ export const projectsData = [
     }
   }
 ];
+
+module.exports = { projectsData };
