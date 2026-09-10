@@ -8,7 +8,9 @@ const certifications = [
   'Introduction to Aircraft Design – Alison',
   'NPTEL – Sustainable Power Generation Systems',
   'AutoCAD – GUVI',
-  'CATIA Basics – Great Learning'
+  'CATIA Basics – Great Learning',
+  'SOLIDWORKS Design Associate (CSWA)',
+  'SOLIDWORKS Additive Manufacturing Associate'
 ];
 
 const workshops = [
